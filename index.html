@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bankomat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0077b6, #0096c7);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #023e8a;
+            padding: 20px;
+            border-radius: 12px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #00b4d8;
+            color: white;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #90e0ef;
+            color: #000;
+        }
+        .balance {
+            font-size: 20px;
+            margin: 15px 0;
+            background: #03045e;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .history {
+            margin-top: 15px;
+            background: #03045e;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-screen">
+        <h1>🔐 Kirish</h1>
+        <input type="password" id="pin" placeholder="PIN-kodni kiriting">
+        <br>
+        <button onclick="login()">Kirish</button>
+    </div>
+
+    <div class="container hidden" id="atm-screen">
+        <h1>💳 Bankomat</h1>
+        <div class="balance">Balans: <span id="balance">100000</span> so'm</div>
+        <input type="number" id="amount" placeholder="Summani kiriting">
+        <br>
+        <button onclick="deposit()">Pul qo‘shish</button>
+        <button onclick="withdraw()">Pul yechish</button>
+        <div class="history" id="history">
+            <strong>Tranzaksiya tarixi:</strong><br>
+        </div>
+    </div>
+
+    <script>
+        const correctPin = "1234"; // PIN kod
+        let balance = 100000;
+        const loginScreen = document.getElementById("login-screen");
+        const atmScreen = document.getElementById("atm-screen");
+        const balanceEl = document.getElementById("balance");
+        const amountEl = document.getElementById("amount");
+        const historyEl = document.getElementById("history");
+
+        function login() {
+            const pin = document.getElementById("pin").value;
+            if (pin === correctPin) {
+                loginScreen.classList.add("hidden");
+                atmScreen.classList.remove("hidden");
+            } else {
+                alert("Noto‘g‘ri PIN kod!");
+            }
+        }
+
+        function updateBalance() {
+            balanceEl.textContent = balance;
+        }
+
+        function addHistory(text) {
+            historyEl.innerHTML += text + "<br>";
+        }
+
+        function deposit() {
+            const amount = parseInt(amountEl.value);
+            if (amount > 0) {
+                balance += amount;
+                updateBalance();
+                addHistory("➕ Pul qo‘shildi: " + amount + " so'm");
+                amountEl.value = "";
+            } else {
+                alert("Iltimos, to‘g‘ri summa kiriting!");
+            }
+        }
+
+        function withdraw() {
+            const amount = parseInt(amountEl.value);
+            if (amount > 0 && amount <= balance) {
+                balance -= amount;
+                updateBalance();
+                addHistory("➖ Pul yechildi: " + amount + " so'm");
+                amountEl.value = "";
+            } else {
+                alert("Mablag‘ yetarli emas yoki noto‘g‘ri summa!");
+            }
+        }
+    </script>
+</body>
+</html>
